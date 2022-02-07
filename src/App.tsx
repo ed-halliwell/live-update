@@ -1,14 +1,22 @@
-import { greet } from "./utils/greet";
-import { Link } from "./components/Link";
-// import { Image } from "./components/Image";
+import React, { useState, useEffect } from "react";
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "http://127.0.0.1:4000";
 
-function App(): JSX.Element {
+export const App: React.FC = () => {
+  const [response, setResponse] = useState("");
+
+  useEffect(() => {
+    const socket = socketIOClient(ENDPOINT);
+    socket.on("FromAPI", (data) => {
+      setResponse(data);
+    });
+  }, []);
+
   return (
-    <>
-      <h1>{greet("World")}</h1>
-      <Link isExternal>Words</Link>
-    </>
+    <p>
+      It's <time dateTime={response}>{response}</time>
+    </p>
   );
-}
+};
 
 export default App;
